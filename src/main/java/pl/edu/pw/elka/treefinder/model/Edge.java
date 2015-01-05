@@ -43,6 +43,15 @@ public class Edge {
                 || (start == edge.end && end == edge.start));
     }
 
+    public boolean equalsNoReferences(Edge edge) {
+        if (equals(edge)) {
+            return true;
+        }
+        return ((start.equals(edge.start) && end.equals(edge.end))
+                || (start.equals(edge.end) && end.equals(edge.start)));
+
+    }
+
     @Override
     public int hashCode() {
         int result;
