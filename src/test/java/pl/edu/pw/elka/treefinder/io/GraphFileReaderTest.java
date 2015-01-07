@@ -4,8 +4,8 @@ import org.junit.Test;
 import pl.edu.pw.elka.treefinder.model.Edge;
 import pl.edu.pw.elka.treefinder.model.Graph;
 import pl.edu.pw.elka.treefinder.model.Vertex;
+import pl.edu.pw.elka.treefinder.test.TestBase;
 
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +13,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class GraphFileReaderTest {
+public class GraphFileReaderTest extends TestBase {
 
     @Test
     public void testRead() throws Exception {
@@ -45,9 +45,5 @@ public class GraphFileReaderTest {
 
     private boolean containsEdge(Set<Edge> edgeSet, Edge edge) {
         return edgeSet.stream().anyMatch(e -> e.equalsNoReferences(edge));
-    }
-
-    private String getResource(String name) throws URISyntaxException {
-        return this.getClass().getClassLoader().getResource(name).getFile();
     }
 }
