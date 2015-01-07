@@ -7,8 +7,7 @@ import pl.edu.pw.elka.treefinder.model.Vertex;
 import pl.edu.pw.elka.treefinder.test.TestBase;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -25,13 +24,13 @@ public class GraphFileReaderTest extends TestBase {
         Vertex v3 = new Vertex(5.0, 3.0);
         Vertex v4 = new Vertex(4.0, -1.2);
         Vertex v5 = new Vertex(0.0, 0.0);
-        Set<Vertex> vertices = new HashSet<>(Arrays.asList(v1, v2, v3, v4, v5));
+        List<Vertex> vertices = Arrays.asList(v1, v2, v3, v4, v5);
 
         Graph output = reader.read();
         // porównanie wierzchołków
         assertEquals(vertices, output.getVertices());
         // porównanie krawędzi
-        Set<Edge> outputEdges = output.getEdges();
+        List<Edge> outputEdges = output.getEdges();
         assertEquals(7, outputEdges.size());
         assertTrue(containsEdge(outputEdges, new Edge(v1, v2, 1)));
         assertTrue(containsEdge(outputEdges, new Edge(v1, v3, 0.5)));
@@ -43,7 +42,7 @@ public class GraphFileReaderTest extends TestBase {
 
     }
 
-    private boolean containsEdge(Set<Edge> edgeSet, Edge edge) {
+    private boolean containsEdge(List<Edge> edgeSet, Edge edge) {
         return edgeSet.stream().anyMatch(e -> e.equalsNoReferences(edge));
     }
 }
