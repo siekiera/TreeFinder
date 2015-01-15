@@ -22,6 +22,11 @@ public class Graph {
         this.edges =  new ArrayList<>(edges);
     }
 
+    public Vertex addVertex(Vertex vertex) {
+        vertices.add(vertex);
+        return vertex;
+    }
+
     public Vertex addVertex(double x, double y) {
         Vertex v = new Vertex(x, y);
         vertices.add(v);
@@ -32,6 +37,10 @@ public class Graph {
         if (vertices.contains(v1) && vertices.contains(v2)) {
             addEdgeUnchecked(v1, v2, weight);
         }
+    }
+
+    public void addEdge(Edge edge) {
+        edges.add(edge);
     }
 
     public void addEdgeUnchecked(Vertex v1, Vertex v2, double weight) {
