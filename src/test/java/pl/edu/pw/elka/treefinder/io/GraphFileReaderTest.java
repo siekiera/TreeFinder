@@ -41,8 +41,4 @@ public class GraphFileReaderTest extends TestBase {
         assertTrue(containsEdge(outputEdges, new Edge(v4, v5, 1)));
 
     }
-
-    private boolean containsEdge(List<Edge> edgeSet, Edge edge) {
-        return edgeSet.stream().anyMatch(e -> e.equalsNoReferences(edge));
-    }
 }

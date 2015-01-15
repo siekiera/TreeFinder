@@ -1,6 +1,9 @@
 package pl.edu.pw.elka.treefinder.test;
 
+import pl.edu.pw.elka.treefinder.model.Edge;
+
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * Klasa bazowa dla testów
@@ -20,5 +23,17 @@ public class TestBase {
      */
     protected String getResource(String name) throws URISyntaxException {
         return this.getClass().getClassLoader().getResource(name).getFile();
+    }
+
+
+    /**
+     * Weryfikuje, czy zbiór krawędzi zawiera krawędź o takich samych wierzchołkach
+     *
+     * @param edgeSet
+     * @param edge
+     * @return
+     */
+    protected boolean containsEdge(List<Edge> edgeSet, Edge edge) {
+        return edgeSet.stream().anyMatch(e -> e.equalsNoReferences(edge));
     }
 }

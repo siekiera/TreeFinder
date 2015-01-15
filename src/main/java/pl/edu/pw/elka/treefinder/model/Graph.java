@@ -1,7 +1,6 @@
 package pl.edu.pw.elka.treefinder.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Klasa reprezentująca graf
@@ -38,6 +37,28 @@ public class Graph {
         return edges;
     }
 
+    public double getDensity() {
+        int vCount = vertices.size();
+        if (vCount == 0) return Double.NaN;
+        return edges.size() / (0.5 * vCount * (vCount - 1));
+    }
+
+    /**
+     * Pobiera krawędź pomiędzy podanymi wierzchołkami
+     *
+     * @param v1
+     * @param v2
+     * @return krawędź lub null, jeśli nie istnieje
+     */
+    public Edge getEdge(Vertex v1, Vertex v2) {
+        for (Edge e: edges) {
+            if (e.getStart() == v1 && e.getEnd() == v2 || e.getEnd() == v1 && e.getStart() == v2) {
+                return e;
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,5 +77,42 @@ public class Graph {
         int result = vertices.hashCode();
         result = 31 * result + edges.hashCode();
         return result;
+    }
+
+    /**
+     * Weryfikuje, czy graf other jest taki sam jak ten graf
+     * tj. zawiera wierzchołki o tych samych współrzędnych
+     * i krawędzie pomiędzy tymi samymi wierzchołkami
+     *
+     * @param other
+     * @return
+     */
+    public boolean sameAs(final Graph other) {
+        // te same wierzchołki (kolejność nieistotna)
+        if (!new HashSet<>(this.vertices).equals(new HashSet<>(other.vertices))) {
+            return false;
+        }
+        // ta sama liczba krawędzi
+        if (!(this.edges.size() == other.edges.size())) {
+            return false;
+        }
+        // każda krawędź z other w this
+        for (Edge e : this.edges) {
+            if (!containsEdge(other.edges, e)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Weryfikuje, czy zbiór krawędzi zawiera krawędź o takich samych wierzchołkach
+     *
+     * @param edgeSet
+     * @param edge
+     * @return
+     */
+    private boolean containsEdge(List<Edge> edgeSet, Edge edge) {
+        return edgeSet.stream().anyMatch(e -> e.equalsNoReferences(edge));
     }
 }
