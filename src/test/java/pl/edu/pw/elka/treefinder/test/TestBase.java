@@ -22,8 +22,8 @@ public class TestBase {
      * @return
      * @throws URISyntaxException
      */
-    protected String getResource(String name) throws URISyntaxException {
-        return this.getClass().getClassLoader().getResource(name).getFile();
+    protected URI getResource(String name) throws URISyntaxException {
+        return this.getClass().getClassLoader().getResource(name).toURI();
     }
 
 
@@ -36,7 +36,5 @@ public class TestBase {
      */
     protected boolean containsEdge(List<Edge> edgeSet, Edge edge) {
         return edgeSet.stream().anyMatch(e -> e.equalsNoReferences(edge));
-    protected URI getResource(String name) throws URISyntaxException {
-        return this.getClass().getClassLoader().getResource(name).toURI();
     }
 }

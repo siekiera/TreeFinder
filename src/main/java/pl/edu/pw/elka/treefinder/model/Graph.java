@@ -1,8 +1,8 @@
 package pl.edu.pw.elka.treefinder.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Klasa reprezentująca graf
@@ -15,11 +15,12 @@ public class Graph {
     private List<Vertex> vertices = new ArrayList<>();
     private List<Edge> edges = new ArrayList<>();
 
-    public Graph() {}
+    public Graph() {
+    }
 
     public Graph(List<Vertex> vertices, List<Edge> edges) {
-        this.vertices =  new ArrayList<>(vertices);
-        this.edges =  new ArrayList<>(edges);
+        this.vertices = new ArrayList<>(vertices);
+        this.edges = new ArrayList<>(edges);
     }
 
     public Vertex addVertex(Vertex vertex) {
@@ -59,7 +60,7 @@ public class Graph {
         clearVisited();
         for (Vertex vertex : vertices) {
             if (!vertex.isVisited()) {
-                if(!vertex.isAcyclic(edges, null)) {
+                if (!vertex.isAcyclic(edges, null)) {
                     return false;
                 }
             }
@@ -69,7 +70,7 @@ public class Graph {
     }
 
     private void clearVisited() {
-        for(Vertex vertex : vertices) {
+        for (Vertex vertex : vertices) {
             vertex.setVisited(false);
         }
     }
@@ -88,7 +89,7 @@ public class Graph {
      * @return krawędź lub null, jeśli nie istnieje
      */
     public Edge getEdge(Vertex v1, Vertex v2) {
-        for (Edge e: edges) {
+        for (Edge e : edges) {
             if (e.getStart() == v1 && e.getEnd() == v2 || e.getEnd() == v1 && e.getStart() == v2) {
                 return e;
             }

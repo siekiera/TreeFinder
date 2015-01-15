@@ -7,6 +7,7 @@ import pl.edu.pw.elka.treefinder.io.GraphFileReaderException;
 import pl.edu.pw.elka.treefinder.model.Graph;
 import pl.edu.pw.elka.treefinder.test.TestBase;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,6 +27,11 @@ public class CorrectnessTest extends TestBase {
     @Test
     public void testPrimAlgorithm() throws Exception {
         performAllTests(new PrimAlgorithm());
+    }
+
+    @Test
+    public void testKruskalAlgorithm() throws Exception {
+        performAllTests(new KruskalAlgorithm());
     }
 
     // TODO :: dodać testy dla pozostałych algorytmów
@@ -88,8 +94,8 @@ public class CorrectnessTest extends TestBase {
 
     }
 
-    private Graph getGraphFromFile(String filename) throws GraphFileReaderException {
-        return new GraphFileReader(filename).read();
+    private Graph getGraphFromFile(String filename) throws GraphFileReaderException, URISyntaxException {
+        return new GraphFileReader(new URI("file://" + filename)).read();
     }
 
 }
