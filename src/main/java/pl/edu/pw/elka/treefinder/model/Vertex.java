@@ -1,5 +1,7 @@
 package pl.edu.pw.elka.treefinder.model;
 
+import java.util.List;
+
 /**
  * Wierzchołek grafu
  * <p/>
@@ -10,6 +12,16 @@ package pl.edu.pw.elka.treefinder.model;
 public class Vertex {
     private final double x;
     private final double y;
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+
+    private boolean visited;
 
     public Vertex(double x, double y) {
         this.x = x;
@@ -22,6 +34,29 @@ public class Vertex {
 
     public double getY() {
         return y;
+    }
+
+    boolean isAcyclic(List<Edge> edges, Vertex from) {
+        if(this.isVisited()) {
+            return false;
+        }
+        this.setVisited(true);
+        for (Edge edge : edges) {
+            if(edge.getStart() == this && edge.getEnd() != from)
+            {
+                if(!edge.getEnd().isAcyclic(edges, this)){
+                    return false;
+                }
+            }
+            if(edge.getEnd() == this && edge.getStart() != from)
+            {
+                if(!edge.getStart().isAcyclic(edges, this)){
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     @Override

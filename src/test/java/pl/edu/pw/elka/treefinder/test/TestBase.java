@@ -1,5 +1,6 @@
 package pl.edu.pw.elka.treefinder.test;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
@@ -18,7 +19,7 @@ public class TestBase {
      * @return
      * @throws URISyntaxException
      */
-    protected String getResource(String name) throws URISyntaxException {
-        return this.getClass().getClassLoader().getResource(name).getFile();
+    protected URI getResource(String name) throws URISyntaxException {
+        return this.getClass().getClassLoader().getResource(name).toURI();
     }
 }

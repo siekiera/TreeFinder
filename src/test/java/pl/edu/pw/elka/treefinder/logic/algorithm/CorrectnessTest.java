@@ -18,7 +18,7 @@ import java.net.URISyntaxException;
 public class CorrectnessTest extends TestBase {
 
 
-    private void performTest(MSTAlgorithm algorithm, String testName) throws Exception {
+    protected void performTest(MSTAlgorithm algorithm, String testName) throws Exception {
         Graph input = getGraphFromResource(testName + ".in");
         Graph expectedOutput = getGraphFromResource(testName + ".out");
         performTest(algorithm, input, expectedOutput);
