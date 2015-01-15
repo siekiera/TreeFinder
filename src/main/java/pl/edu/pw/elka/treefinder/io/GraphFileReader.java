@@ -4,6 +4,7 @@ import pl.edu.pw.elka.treefinder.model.Graph;
 import pl.edu.pw.elka.treefinder.model.Vertex;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +21,7 @@ public class GraphFileReader {
 
     private final Path path;
 
-    public GraphFileReader(String filename) {
+    public GraphFileReader(URI filename) {
         this.path = Paths.get(filename);
     }
 

@@ -1,5 +1,6 @@
 package pl.edu.pw.elka.treefinder.test;
 
+import java.net.URI;
 import pl.edu.pw.elka.treefinder.model.Edge;
 
 import java.net.URISyntaxException;
@@ -35,5 +36,7 @@ public class TestBase {
      */
     protected boolean containsEdge(List<Edge> edgeSet, Edge edge) {
         return edgeSet.stream().anyMatch(e -> e.equalsNoReferences(edge));
+    protected URI getResource(String name) throws URISyntaxException {
+        return this.getClass().getClassLoader().getResource(name).toURI();
     }
 }

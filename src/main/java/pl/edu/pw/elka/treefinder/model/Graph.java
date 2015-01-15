@@ -1,6 +1,8 @@
 package pl.edu.pw.elka.treefinder.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Klasa reprezentująca graf
@@ -10,8 +12,20 @@ import java.util.*;
  * @author Michał Toporowski
  */
 public class Graph {
-    private final List<Vertex> vertices = new ArrayList<>();
-    private final List<Edge> edges = new ArrayList<>();
+    private List<Vertex> vertices = new ArrayList<>();
+    private List<Edge> edges = new ArrayList<>();
+
+    public Graph() {}
+
+    public Graph(List<Vertex> vertices, List<Edge> edges) {
+        this.vertices =  new ArrayList<>(vertices);
+        this.edges =  new ArrayList<>(edges);
+    }
+
+    public Vertex addVertex(Vertex vertex) {
+        vertices.add(vertex);
+        return vertex;
+    }
 
     public Vertex addVertex(double x, double y) {
         Vertex v = new Vertex(x, y);
@@ -25,6 +39,10 @@ public class Graph {
         }
     }
 
+    public void addEdge(Edge edge) {
+        edges.add(edge);
+    }
+
     public void addEdgeUnchecked(Vertex v1, Vertex v2, double weight) {
         edges.add(new Edge(v1, v2, weight));
     }
@@ -35,6 +53,25 @@ public class Graph {
 
     public List<Edge> getEdges() {
         return edges;
+    }
+
+    public boolean isAcyclic() {
+        clearVisited();
+        for (Vertex vertex : vertices) {
+            if (!vertex.isVisited()) {
+                if(!vertex.isAcyclic(edges, null)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private void clearVisited() {
+        for(Vertex vertex : vertices) {
+            vertex.setVisited(false);
+        }
     }
 
     public double getDensity() {
@@ -115,4 +152,6 @@ public class Graph {
     private boolean containsEdge(List<Edge> edgeSet, Edge edge) {
         return edgeSet.stream().anyMatch(e -> e.equalsNoReferences(edge));
     }
+
 }
+
