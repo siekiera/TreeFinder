@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import pl.edu.pw.elka.treefinder.io.GraphFileReader;
 import pl.edu.pw.elka.treefinder.io.GraphFileReaderException;
+import pl.edu.pw.elka.treefinder.logic.generator.GraphGeneratorImpl;
 import pl.edu.pw.elka.treefinder.model.Graph;
 import pl.edu.pw.elka.treefinder.test.TestBase;
 
@@ -12,6 +13,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +39,21 @@ public class CorrectnessTest extends TestBase {
     @Test
     public void testBoruvkaAlgorithm() throws Exception {
         performAllTests(new BoruvkaAlgorithm());
+    }
+
+    @Test
+    public void testPrimForRightVertexCount() throws Exception {
+        int correct = 0, total = 0;
+        for (int i = 10; i < 30; i += 5) {
+            Graph g = new GraphGeneratorImpl().generate(10, 0.5f);
+            Graph t = new PrimAlgorithm().calculate(g);
+            // Sprawdzamy, czy na pewno wszystkie wierzchołki są
+            if (new HashSet<>(t.getVertices()).size() == g.getVertices().size()) {
+                correct++;
+            }
+            total++;
+        }
+        Assert.assertEquals(total, correct);
     }
 
 

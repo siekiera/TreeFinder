@@ -53,6 +53,7 @@ public class Heap<T> {
             hTable[0] = hTable[--size];
             heapify(0);
             indexMap.remove(result);
+            hTable[size] = null;
         }
         return result;
     }
