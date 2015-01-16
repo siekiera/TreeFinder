@@ -1,6 +1,6 @@
 package pl.edu.pw.elka.treefinder;
 
-import pl.edu.pw.elka.treefinder.ui.View;
+import pl.edu.pw.elka.treefinder.ui.MainWindow;
 
 /**
  * Główna klasa aplikacji
@@ -12,6 +12,6 @@ import pl.edu.pw.elka.treefinder.ui.View;
 public final class TreeFinder {
 
     public static void main(String[] args) {
-        new View();
+        MainWindow.main(args);
     }
 }
