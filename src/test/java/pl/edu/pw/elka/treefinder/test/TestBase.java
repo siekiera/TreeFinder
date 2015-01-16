@@ -35,6 +35,6 @@ public class TestBase {
      * @return
      */
     protected boolean containsEdge(List<Edge> edgeSet, Edge edge) {
-        return edgeSet.stream().anyMatch(e -> e.equalsNoReferences(edge));
+        return edgeSet.stream().anyMatch(e -> e.equals(edge));
     }
 }

@@ -131,29 +131,7 @@ public class Graph {
         if (!new HashSet<>(this.vertices).equals(new HashSet<>(other.vertices))) {
             return false;
         }
-        // ta sama liczba krawędzi
-        if (!(this.edges.size() == other.edges.size())) {
-            return false;
-        }
-        // każda krawędź z other w this
-        for (Edge e : this.edges) {
-            if (!containsEdge(other.edges, e)) {
-                return false;
-            }
-        }
-        return true;
+        return new HashSet<>(this.edges).equals(new HashSet<>(other.edges));
     }
-
-    /**
-     * Weryfikuje, czy zbiór krawędzi zawiera krawędź o takich samych wierzchołkach
-     *
-     * @param edgeSet
-     * @param edge
-     * @return
-     */
-    private boolean containsEdge(List<Edge> edgeSet, Edge edge) {
-        return edgeSet.stream().anyMatch(e -> e.equalsNoReferences(edge));
-    }
-
 }
 

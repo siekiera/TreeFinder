@@ -45,7 +45,6 @@ public class PrimAlgorithm implements MSTAlgorithm {
         while (!(tree.getVertices().size() == inputGraph.getVertices().size())) {
             //wśród nieprzetworzonych wierzchołków (spoza obecnego MDR) wybierz ten, dla którego koszt dojścia z obecnego MDR jest najmniejszy.
             Vertex next = heap.pop();
-            //FIXME:: suboptimal
             //dodaj do obecnego MDR wierzchołek i krawędź realizującą najmniejszy koszt
             Vertex connected = vertexConnections.get(next);
             Edge nextEdge = new Edge(next, connected, inputAjGraph.getEdgeWeight(next, connected));
@@ -68,7 +67,7 @@ public class PrimAlgorithm implements MSTAlgorithm {
         List<Vertex> neighbours = inputAjGraph.getNeighbours(v);
         double distFromStart = 0.0;//vertexDistances.get(v);
         for (Vertex n : neighbours) {
-            double distance = distFromStart + inputAjGraph.getEdgeWeight(v, n);//inputGraph.getEdge(v, n).getWeight();
+            double distance = distFromStart + inputAjGraph.getEdgeWeight(v, n);
             if (!processed.contains(n)) {
                 if (vertexDistances.get(n) == null) {
                     vertexDistances.put(n, distance);

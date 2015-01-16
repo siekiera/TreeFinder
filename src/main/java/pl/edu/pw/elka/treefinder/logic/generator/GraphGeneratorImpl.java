@@ -35,7 +35,7 @@ public class GraphGeneratorImpl implements GraphGenerator{
                     generator.nextDouble() * 100);
             boolean exists = false;
             for(Edge currentEdge : graph.getEdges()) {
-                if(currentEdge.equalsNoReferences(edge))
+                if(currentEdge.equals(edge))
                 {
                     exists = true;
                     break;
