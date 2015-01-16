@@ -36,13 +36,12 @@ public class Edge {
         if (o == null || getClass() != o.getClass()) return false;
 
         Edge edge = (Edge) o;
-
-        if (Double.compare(edge.weight, weight) != 0) return false;
-        // Porównujemy referencje; graf niezorientowany
-        return ((start == edge.start && end == edge.end)
-                || (start == edge.end && end == edge.start));
+        // Krawędzie powinny być równe niezależnie od kolejności start, end
+        return ((start.equals(edge.start) && end.equals(edge.end))
+                || (start.equals(edge.end) && end.equals(edge.start)));
     }
 
+    @Deprecated
     public boolean equalsNoReferences(Edge edge) {
         if (equals(edge)) {
             return true;
@@ -54,12 +53,17 @@ public class Edge {
 
     @Override
     public int hashCode() {
+        // hashCode taki sam niezależnie od kolejności start, end
+        int startHash = start.hashCode();
+        int endHash = end.hashCode();
         int result;
-        long temp;
-        result = start.hashCode();
-        result = 31 * result + end.hashCode();
-        temp = Double.doubleToLongBits(weight);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        if (startHash < endHash) {
+            result = startHash;
+            result = 31 * result + endHash;
+        } else {
+            result = endHash;
+            result = 31 * result + startHash;
+        }
         return result;
     }
 }

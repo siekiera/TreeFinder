@@ -11,6 +11,7 @@ import java.util.*;
  */
 public class AdjListGraph {
     private Map<Vertex, List<Vertex>> adjList = new HashMap<>();
+    private Map<Edge, Double> weights = new HashMap<>();
 
     public AdjListGraph(Graph g) {
         for (Edge e : g.getEdges()) {
@@ -18,6 +19,7 @@ public class AdjListGraph {
             Vertex v2 = e.getEnd();
             getNeighbours(v1).add(v2);
             getNeighbours(v2).add(v1);
+            weights.put(e, e.getWeight());
         }
     }
 
@@ -34,6 +36,17 @@ public class AdjListGraph {
             adjList.put(v, neighbours);
         }
         return neighbours;
+    }
+
+    /**
+     * Pobiera wagę krawędzi pomiędzy danymi wierzchołkami
+     *
+     * @param v1
+     * @param v2
+     * @return
+     */
+    public double getEdgeWeight(Vertex v1, Vertex v2) {
+       return weights.get(new Edge(v1, v2, 0));
     }
 
     public Set<Vertex> getVertices() {

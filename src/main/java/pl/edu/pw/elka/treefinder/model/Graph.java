@@ -88,6 +88,7 @@ public class Graph {
      * @param v2
      * @return krawędź lub null, jeśli nie istnieje
      */
+    @Deprecated
     public Edge getEdge(Vertex v1, Vertex v2) {
         for (Edge e : edges) {
             if (e.getStart() == v1 && e.getEnd() == v2 || e.getEnd() == v1 && e.getStart() == v2) {
