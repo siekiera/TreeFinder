@@ -1,6 +1,8 @@
 package pl.edu.pw.elka.treefinder.logic.algorithm.util;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Kopiec binarny
@@ -11,6 +13,7 @@ import java.util.Comparator;
  */
 public class Heap<T> {
     private final Comparator<T> comparator;
+    private final Map<T, Integer> indexMap;
     private int capacity;
     private int size = 0;
     private T[] hTable;
@@ -19,6 +22,7 @@ public class Heap<T> {
         this.comparator = comparator;
         this.capacity = capacity;
         this.hTable = (T[]) new Object[capacity];
+        this.indexMap = new HashMap<>();
     }
 
     /**
@@ -33,20 +37,14 @@ public class Heap<T> {
         hTable[size++] = object;
         //przesuwaj go do gory, dopoki nierownosc kopca nie bedzie spełniona, albo dojdzie
         //do korzenia
-        //dla komorki o indeksie i jej rodzic to i/2 (dzielenie calkowite)
-        //odnoszac sie do komorek tablicy trzeba odejmowac 1, poniewaz jest ona numerowana
-        //od 0 do n-1, a nie 1 do n
-        int i = size;
-        while (i > 1 && comparator.compare(hTable[i / 2 - 1], hTable[i - 1]) > 0) {
-            swapArrayElems(i / 2 - 1, i - 1);
-            i /= 2;
-        }
+        int index = moveUp(size - 1);
+        indexMap.put(object, index);
     }
 
     /**
      * Pobiera element ze szczytu kopca i usuwa go
      *
-     * @return
+     * @return element ze szczytu kopca
      */
     public T pop() {
         T result = null;
@@ -54,10 +52,44 @@ public class Heap<T> {
             result = hTable[0];
             hTable[0] = hTable[--size];
             heapify(0);
+            indexMap.remove(result);
         }
         return result;
     }
 
+    /**
+     * Wykonuje operację decreaseKey (zmniejszenie wartości klucza)
+     *
+     * @param key klucz
+     */
+    public void decreaseKey(T key) {
+        int oldIndex = indexMap.get(key);
+        int newIndex = moveUp(oldIndex);
+        indexMap.put(key, newIndex);
+    }
+
+    /**
+     * Przesuwa element do góry dopoki nierownosc kopca nie bedzie spełniona, albo dojdzie
+     * do korzenia
+     *
+     * @param index pierwotny indeks elementu
+     * @return ostateczny indeks elementu
+     */
+    private int moveUp(int index) {
+        //dla komorki o indeksie i jej rodzic to i/2 (dzielenie calkowite)
+        //odnoszac sie do komorek tablicy trzeba odejmowac 1, poniewaz jest ona numerowana
+        //od 0 do n-1, a nie 1 do n
+        int i = index + 1;
+        while (i > 1 && comparator.compare(hTable[i / 2 - 1], hTable[i - 1]) > 0) {
+            swapArrayElems(i / 2 - 1, i - 1);
+            i /= 2;
+        }
+        return i - 1;
+    }
+
+    /**
+     * Weryfikuje, że kopiec zmieści jeszcze jeden węzeł i rozszerza go w razie potrzeby
+     */
     private void checkCapacity() {
         if (capacity <= size) {
             capacity *= 2;
@@ -67,6 +99,10 @@ public class Heap<T> {
         }
     }
 
+    /**
+     * Operacja przesuwania elementów w dół kopca (po usunięciu)
+     * @param node
+     */
     private void heapify(int node) {
         int leftIdx = 2 * node;
         int rightIdx = 2 * node + 1;

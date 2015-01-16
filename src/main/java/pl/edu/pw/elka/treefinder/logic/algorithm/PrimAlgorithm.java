@@ -19,16 +19,18 @@ public class PrimAlgorithm implements MSTAlgorithm {
     /**
      * mapa wierzchołek->odl. od źródła; null: nieskończoność
      */
-    private Map<Vertex, Double> vertexDistances = new HashMap<>();
-    private Map<Vertex, Vertex> vertexConnections = new HashMap<>();
-    private Set<Vertex> processed = new HashSet<>();
+    private Map<Vertex, Double> vertexDistances;
+    private Map<Vertex, Vertex> vertexConnections;
+    private Set<Vertex> processed;
     private AdjListGraph inputAjGraph;
     private Graph inputGraph;
     private Heap<Vertex> heap;
 
     @Override
     public Graph calculate(Graph inputGraph) {
-        // TODO:: implementacja
+        this.vertexDistances = new HashMap<>();
+        this.vertexConnections = new HashMap<>();
+        this.processed = new HashSet<>();
         this.inputGraph = inputGraph;
         Graph tree = new Graph();
         inputAjGraph = new AdjListGraph(inputGraph);
@@ -67,10 +69,14 @@ public class PrimAlgorithm implements MSTAlgorithm {
         for (Vertex n : neighbours) {
             double distance = distFromStart + inputGraph.getEdge(v, n).getWeight();
             if (!processed.contains(n)) {
-                if (vertexDistances.get(n) == null || vertexDistances.get(n) >= distance) {
+                if (vertexDistances.get(n) == null) {
                     vertexDistances.put(n, distance);
                     vertexConnections.put(n, v);
                     heap.insert(n);
+                } else if (vertexDistances.get(n) >= distance) {
+                    vertexDistances.put(n, distance);
+                    vertexConnections.put(n, v);
+                    heap.decreaseKey(n);
                 }
             }
         }

@@ -34,7 +34,10 @@ public class CorrectnessTest extends TestBase {
         performAllTests(new KruskalAlgorithm());
     }
 
-    // TODO :: dodać testy dla pozostałych algorytmów
+    @Test
+    public void testBoruvkaAlgorithm() throws Exception {
+        performAllTests(new BoruvkaAlgorithm());
+    }
 
 
     /**
