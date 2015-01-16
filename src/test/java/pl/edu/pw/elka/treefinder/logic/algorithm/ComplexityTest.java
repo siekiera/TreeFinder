@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class ComplexityTest {
 
-    private final MSTAlgorithm[] algorithms = {new PrimAlgorithm(), new KruskalAlgorithm()};
+    private final MSTAlgorithm[] algorithms = {new BoruvkaAlgorithm(), new KruskalAlgorithm(), new PrimAlgorithm()};
     private static final float[] DENSITIES = {0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f};
     private static final int[] VERTEX_COUNTS = {50, 100, 150, 200, 250, 300, 350, 400};
     private static final int NUMBER_OF_TESTS = 5;

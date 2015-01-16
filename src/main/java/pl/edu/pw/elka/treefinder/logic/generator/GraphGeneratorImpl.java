@@ -5,7 +5,9 @@ import pl.edu.pw.elka.treefinder.model.Graph;
 import pl.edu.pw.elka.treefinder.model.Vertex;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by monika on 2015-01-15.
@@ -15,14 +17,18 @@ public class GraphGeneratorImpl implements GraphGenerator{
     @Override
     public Graph generate(int vertexCount, float density) {
         Graph graph = new Graph();
+        // Zbiór do przechowywania dodanych kraw. - wyszukiwanie w nim jest znacznie szybsze, niż w liście
+        Set<Edge> addedEdges = new HashSet<>();
         graph.addVertex(createVertex());
 
         for(int i=1; i<vertexCount; i++)
         {
-            graph.addEdge(
+            Edge e = new Edge(
                     graph.getVertices().get(generator.nextInt(graph.getVertices().size())),
                     graph.addVertex(createVertex()),
                     generator.nextDouble() * 100);
+            graph.addEdge(e);
+            addedEdges.add(e);
         }
         //ilość krawędzi do wylosowania: = density* n(n-1)/2 - (n-1)
         int n = graph.getVertices().size();
@@ -33,16 +39,10 @@ public class GraphGeneratorImpl implements GraphGenerator{
                     graph.getVertices().get(generator.nextInt(graph.getVertices().size())),
                     graph.getVertices().get(generator.nextInt(graph.getVertices().size())),
                     generator.nextDouble() * 100);
-            boolean exists = false;
-            for(Edge currentEdge : graph.getEdges()) {
-                if(currentEdge.equals(edge))
-                {
-                    exists = true;
-                    break;
-                }
-            }
+            boolean exists = addedEdges.contains(edge);
             if(!exists) {
                 graph.addEdge(edge);
+                addedEdges.add(edge);
                 x--;
             }
         }
