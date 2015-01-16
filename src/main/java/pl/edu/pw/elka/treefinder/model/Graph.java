@@ -3,6 +3,7 @@ package pl.edu.pw.elka.treefinder.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Klasa reprezentująca graf
@@ -81,11 +82,41 @@ public class Graph {
         return edges.size() / (0.5 * vCount * (vCount - 1));
     }
 
-    public void findNeighbours()
-    {
-        //TO DO
+    public List<List<Vertex>> makeGroups(){
+        vertices.forEach(v -> v.setGroupNumber(0));
+        int i = 1;
+        for(Edge currentEdge : this.getEdges())
+        {
+            Vertex v1 = currentEdge.getStart();
+            Vertex v2 = currentEdge.getEnd();
+            if(v1.getGroupNumber() == 0 && v2.getGroupNumber() == 0 ){
+                v1.setGroupNumber(i);
+                v2.setGroupNumber(i);
+                i++;
+            }
+            else if(v1.getGroupNumber() == 0 || v2.getGroupNumber() == 0 ){
+                int nr = Integer.max(v1.getGroupNumber(), v2.getGroupNumber());
+                v1.setGroupNumber(nr);
+                v2.setGroupNumber(nr);
+            }
+            else {
+                int nr1 = v1.getGroupNumber();
+                int nr2 = v2.getGroupNumber();
+                this.getVertices().stream().filter(vertex -> vertex.getGroupNumber() == nr1).forEach(vertex -> {
+                    vertex.setGroupNumber(nr2);
+                });
+            }
+        }
+        List<Integer> processed = new ArrayList<>();
+        List<List<Vertex>> finalList = new ArrayList<>();
+        for(Vertex vertex : getVertices()) {
+            if(!processed.contains(vertex.getGroupNumber())) {
+                processed.add(vertex.getGroupNumber());
+                finalList.add(vertices.stream().filter(v -> vertex.getGroupNumber() == v.getGroupNumber()).collect(Collectors.toList()));
+            }
+        }
+        return finalList;
     }
-
     /**
      * Pobiera krawędź pomiędzy podanymi wierzchołkami
      *
