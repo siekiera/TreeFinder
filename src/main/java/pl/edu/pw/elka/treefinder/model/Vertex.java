@@ -12,9 +12,16 @@ import java.util.List;
 public class Vertex {
     private final double x;
     private final double y;
-    private List<Edge> neighbours;
 
-    public List<Edge> getNeighbours() { return neighbours; }
+    public int getGroupNumber() {
+        return groupNumber;
+    }
+
+    public void setGroupNumber(int groupNumber) {
+        this.groupNumber = groupNumber;
+    }
+
+    private int groupNumber;
 
     public boolean isVisited() {
         return visited;

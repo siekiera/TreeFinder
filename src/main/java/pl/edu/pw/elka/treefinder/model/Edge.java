@@ -18,12 +18,6 @@ public class Edge {
         this.weight = weight;
     }
 
-    public Edge() {
-        this.start = null;
-        this.end = null;
-        this.weight = 999;
-    }
-
     public Vertex getStart() {
         return start;
     }
