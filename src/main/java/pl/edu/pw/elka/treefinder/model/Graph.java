@@ -81,6 +81,11 @@ public class Graph {
         return edges.size() / (0.5 * vCount * (vCount - 1));
     }
 
+    public void findNeighbours()
+    {
+        //TO DO
+    }
+
     /**
      * Pobiera krawędź pomiędzy podanymi wierzchołkami
      *

@@ -12,6 +12,9 @@ import java.util.List;
 public class Vertex {
     private final double x;
     private final double y;
+    private List<Edge> neighbours;
+
+    public List<Edge> getNeighbours() { return neighbours; }
 
     public boolean isVisited() {
         return visited;
