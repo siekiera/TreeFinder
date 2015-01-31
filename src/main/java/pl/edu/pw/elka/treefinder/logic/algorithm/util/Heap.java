@@ -50,10 +50,13 @@ public class Heap<T> {
         T result = null;
         if (size > 0) {
             result = hTable[0];
-            hTable[0] = hTable[--size];
-            heapify(0);
             indexMap.remove(result);
-            hTable[size] = null;
+            hTable[0] = hTable[--size];
+            if (size > 0) {
+                hTable[size] = null;
+                indexMap.put(hTable[0], 0);
+                heapify(0);
+            }
         }
         return result;
     }
@@ -105,8 +108,8 @@ public class Heap<T> {
      * @param node
      */
     private void heapify(int node) {
-        int leftIdx = 2 * node;
-        int rightIdx = 2 * node + 1;
+        int leftIdx = 2 * node + 1;
+        int rightIdx = 2 * node + 2;
         int largestIdx = node;
         if (leftIdx < size && comparator.compare(hTable[leftIdx], hTable[largestIdx]) < 0) {
             largestIdx = leftIdx;
@@ -124,5 +127,7 @@ public class Heap<T> {
         T tmp = hTable[i];
         hTable[i] = hTable[j];
         hTable[j] = tmp;
+        indexMap.put(hTable[j], j);
+        indexMap.put(hTable[i], i);
     }
 }

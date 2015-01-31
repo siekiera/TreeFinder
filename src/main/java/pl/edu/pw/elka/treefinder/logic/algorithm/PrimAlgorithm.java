@@ -91,9 +91,9 @@ public class PrimAlgorithm implements MSTAlgorithm {
         public int compare(Vertex v1, Vertex v2) {
             Double dist1 = vertexDistances.get(v1);
             Double dist2 = vertexDistances.get(v2);
-            if (dist1 == null && dist2 == null) return 0;
-            if (dist1 == null) return 1;
-            if (dist2 == null) return -1;
+//            if (dist1 == null && dist2 == null) return 0;
+//            if (dist1 == null) return 1;
+//            if (dist2 == null) return -1;
             return Double.compare(dist1, dist2);
         }
     }
