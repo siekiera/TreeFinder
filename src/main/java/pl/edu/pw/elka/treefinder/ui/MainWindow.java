@@ -146,10 +146,7 @@ public class MainWindow {
     private void stopAlgorithm() {
         long timeElapsed = System.nanoTime() - startTime;
         time.setText(Long.toString(timeElapsed/1000) + " ms");
-        Double weight = 0.0;
-        for(Edge edge : mstGraph.getEdges()) {
-            weight += edge.getWeight();
-        }
+        Double weight = mstGraph.totalWeight();
         mstWeight.setText(weight.toString());
         mstGraphPanel.repaint();
     }

@@ -56,6 +56,29 @@ public class CorrectnessTest extends TestBase {
         Assert.assertEquals(total, correct);
     }
 
+    @Test
+    public void testForSameWeights() throws Exception {
+        int correct = 0, total = 0;
+        for (int i = 10; i < 30; i += 5) {
+            Graph g = new GraphGeneratorImpl().generate(10, 0.5f);
+            Graph primTree = new PrimAlgorithm().calculate(g);
+            Graph kruskalTree = new KruskalAlgorithm().calculate(g);
+            Graph boruvkaTree = new BoruvkaAlgorithm().calculate(g);
+            if ((int) primTree.totalWeight() != (int) kruskalTree.totalWeight()) {
+                System.out.println(String.format("Wynik Prima (%s) != wynikowi Kruskala (%s)", primTree.totalWeight(), kruskalTree.totalWeight()));
+            } else if ((int) primTree.totalWeight() != (int) boruvkaTree.totalWeight()) {
+                System.out.println(String.format("Wynik Prima (%s) != wynikowi Boruvki (%s)", primTree.totalWeight(), boruvkaTree.totalWeight()));
+            } else if ((int) kruskalTree.totalWeight() != (int) boruvkaTree.totalWeight()) {
+                System.out.println(String.format("Wynik Kruskala (%s) != wynikowi Boruvki (%s)", kruskalTree.totalWeight(), boruvkaTree.totalWeight()));
+            } else {
+                System.out.println("Wszystkie drzewa tej samej wagi");
+                correct++;
+            }
+            total++;
+        }
+        Assert.assertEquals(total, correct);
+    }
+
 
     /**
      * Uruchamia testy poprawności wybranego algorytmu dla wszystkich danych

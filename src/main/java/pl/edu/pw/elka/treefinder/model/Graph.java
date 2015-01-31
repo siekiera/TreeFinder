@@ -117,6 +117,15 @@ public class Graph {
         }
         return finalList;
     }
+
+    public double totalWeight() {
+        double weight = 0.0;
+        for(Edge edge : edges) {
+            weight += edge.getWeight();
+        }
+        return weight;
+    }
+
     /**
      * Pobiera krawędź pomiędzy podanymi wierzchołkami
      *
