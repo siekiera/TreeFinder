@@ -11,10 +11,18 @@ import pl.edu.pw.elka.treefinder.model.Graph;
 import pl.edu.pw.elka.treefinder.model.Vertex;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Created by monika on 2015-01-15.
@@ -38,6 +46,7 @@ public class MainWindow {
     private JPanel inputGraphPanel;
     private JPanel mstGraphPanel;
     private JButton saveToFileButton;
+    private JTextField densityTextField;
 
     private Graph inputGraph;
     private Graph mstGraph;
@@ -47,7 +56,7 @@ public class MainWindow {
         numberOfVertices.setModel(new SpinnerNumberModel(10, 2, 1000, 1));
         generate.addActionListener(e -> {
             try {
-                inputGraph = new GraphGeneratorImpl().generate((int)numberOfVertices.getValue(), ((float)density.getValue()) / 100.0f);
+                inputGraph = new GraphGeneratorImpl().generate((int) numberOfVertices.getValue(), ((float) density.getValue()) / 100.0f);
                 inputGraphPanel.repaint();
             } catch (Exception ex) {
                 // TODO obsługa błędów
@@ -86,12 +95,59 @@ public class MainWindow {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
                 int result = fileChooser.showSaveDialog(panel1);
-                if (result == JFileChooser.SAVE_DIALOG) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    // TODO save to selectedFile
+                if (result == JFileChooser.APPROVE_OPTION || result == JFileChooser.SAVE_DIALOG) {
+                    try {
+                        Graph selGraph = tabbedPane1.getSelectedIndex() == 0 ? inputGraph : mstGraph;
+                        File selectedFile = fileChooser.getSelectedFile();
+                        if (!selectedFile.exists()) {
+                            selectedFile.createNewFile();
+                        }
+
+                        FileWriter fw = new FileWriter(selectedFile.getAbsoluteFile());
+                        BufferedWriter bw = new BufferedWriter(fw);
+                        bw.write(String.valueOf(selGraph.getVertices().size()) + "\n");
+                        bw.write(String.valueOf(selGraph.getEdges().size()) + "\n");
+                        for(int i = 0; i < selGraph.getVertices().size(); ++i) {
+                            Vertex v = selGraph.getVertices().get(i);
+                            bw.write(String.valueOf(v.getX()) + " " + String.valueOf(v.getY()) + "\n");
+                            v.setGroupNumber(i);
+                        }
+                        selGraph.getEdges().forEach(edge -> {
+                            try {
+                                bw.write(String.valueOf(edge.getStart().getGroupNumber() + 1) + " " + String.valueOf(edge.getEnd().getGroupNumber() + 1) + " " + String.valueOf(edge.getWeight()) + "\n");
+                            } catch (IOException e1) {
+                            }
+                        });
+                        bw.close();
+                    } catch (Exception e1) {
+                        // TODO obsluga bledu
+                    }
                 }
             }
         });
+        density.addChangeListener(e -> {
+            int val = validateDensityValue(density.getValue());
+            densityTextField.setText(String.valueOf(val));
+            density.setValue(val);
+        });
+        densityTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent ke) {
+                String typed = densityTextField.getText();
+                density.setValue(validateDensityValue(0));
+                if (!typed.matches("\\d+")) {
+                    return;
+                }
+                int value = validateDensityValue(Integer.parseInt(typed));
+                densityTextField.setText(String.valueOf(value));
+                density.setValue(value);
+            }
+        });
+    }
+
+    private int validateDensityValue(int value) {
+        int min = 200/(int)numberOfVertices.getValue();
+        return Math.max(value, min);
     }
 
     public static void main(String[] args) {

@@ -5,9 +5,8 @@ import pl.edu.pw.elka.treefinder.model.Graph;
 import pl.edu.pw.elka.treefinder.model.Vertex;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by monika on 2015-01-15.
@@ -17,8 +16,6 @@ public class GraphGeneratorImpl implements GraphGenerator{
     @Override
     public Graph generate(int vertexCount, float density) {
         Graph graph = new Graph();
-        // Zbiór do przechowywania dodanych kraw. - wyszukiwanie w nim jest znacznie szybsze, niż w liście
-        Set<Edge> addedEdges = new HashSet<>();
         graph.addVertex(createVertex());
 
         for(int i=1; i<vertexCount; i++)
@@ -28,23 +25,30 @@ public class GraphGeneratorImpl implements GraphGenerator{
                     graph.addVertex(createVertex()),
                     generator.nextDouble() * 100);
             graph.addEdge(e);
-            addedEdges.add(e);
         }
+
+        List <Edge> edgesWeCanAdd = new ArrayList<Edge>();
+        for(int i=0; i<graph.getVertices().size()-1; i++){
+            for(int j=i+1; j<graph.getVertices().size();j++){
+                Edge e1 = new Edge(graph.getVertices().get(i),
+                        graph.getVertices().get(j),
+                        generator.nextDouble() * 100);
+                if(!graph.getEdges().contains(e1)){
+                    edgesWeCanAdd.add(e1);
+                }
+            }
+        }
+
         //ilość krawędzi do wylosowania: = density* n(n-1)/2 - (n-1)
         int n = graph.getVertices().size();
         int x = (int) (density*n*(n-1)/2 - n+1);
         while(x>0)
         {
-            Edge edge = new Edge(
-                    graph.getVertices().get(generator.nextInt(graph.getVertices().size())),
-                    graph.getVertices().get(generator.nextInt(graph.getVertices().size())),
-                    generator.nextDouble() * 100);
-            boolean exists = addedEdges.contains(edge);
-            if(!exists) {
-                graph.addEdge(edge);
-                addedEdges.add(edge);
-                x--;
-            }
+            int i = generator.nextInt(edgesWeCanAdd.size());
+            graph.addEdge(edgesWeCanAdd.get(i));
+            edgesWeCanAdd.remove(i);
+            x--;
+
         }
         return graph;
     }
