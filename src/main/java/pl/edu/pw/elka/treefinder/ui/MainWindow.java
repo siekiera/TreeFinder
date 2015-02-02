@@ -23,6 +23,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
+
 
 /**
  * Created by monika on 2015-01-15.
@@ -90,41 +92,7 @@ public class MainWindow {
             mstGraph = new BoruvkaAlgorithm().calculate(inputGraph);
             stopAlgorithm();
         });
-        saveToFileButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                int result = fileChooser.showSaveDialog(panel1);
-                if (result == JFileChooser.APPROVE_OPTION || result == JFileChooser.SAVE_DIALOG) {
-                    try {
-                        Graph selGraph = tabbedPane1.getSelectedIndex() == 0 ? inputGraph : mstGraph;
-                        File selectedFile = fileChooser.getSelectedFile();
-                        if (!selectedFile.exists()) {
-                            selectedFile.createNewFile();
-                        }
 
-                        FileWriter fw = new FileWriter(selectedFile.getAbsoluteFile());
-                        BufferedWriter bw = new BufferedWriter(fw);
-                        bw.write(String.valueOf(selGraph.getVertices().size()) + "\n");
-                        bw.write(String.valueOf(selGraph.getEdges().size()) + "\n");
-                        for(int i = 0; i < selGraph.getVertices().size(); ++i) {
-                            Vertex v = selGraph.getVertices().get(i);
-                            bw.write(String.valueOf(v.getX()) + " " + String.valueOf(v.getY()) + "\n");
-                            v.setGroupNumber(i);
-                        }
-                        selGraph.getEdges().forEach(edge -> {
-                            try {
-                                bw.write(String.valueOf(edge.getStart().getGroupNumber() + 1) + " " + String.valueOf(edge.getEnd().getGroupNumber() + 1) + " " + String.valueOf(edge.getWeight()) + "\n");
-                            } catch (IOException e1) {
-                            }
-                        });
-                        bw.close();
-                    } catch (Exception e1) {
-                        // TODO obsluga bledu
-                    }
-                }
-            }
-        });
         density.addChangeListener(e -> {
             int val = validateDensityValue(density.getValue());
             densityTextField.setText(String.valueOf(val));
@@ -173,6 +141,23 @@ public class MainWindow {
                     (int)v1.getY() * inputGraphPanel.getHeight() / 100,
                     (int)v2.getX() * inputGraphPanel.getWidth() / 100,
                     (int)v2.getY() * inputGraphPanel.getHeight() / 100);
+            for(int i = 0; i < inputGraph.getVertices().size(); ++i) {
+                Vertex v = inputGraph.getVertices().get(i);
+                v.setGroupNumber(i);
+            }
+            Color old = g.getColor();
+            g.setColor(Color.BLUE);
+            g.drawString(String.valueOf(v1.getGroupNumber()),
+                    (int)v1.getX() * inputGraphPanel.getWidth() / 100,
+                    (int)v1.getY() * inputGraphPanel.getHeight() / 100);
+            g.drawString(String.valueOf(v2.getGroupNumber()),
+                    (int)v2.getX() * inputGraphPanel.getWidth() / 100,
+                    (int)v2.getY() * inputGraphPanel.getHeight() / 100);
+            g.setColor(old);
+
+            g.drawString(new DecimalFormat("#.##").format(edge.getWeight()),
+                    (int) ((v1.getX() * inputGraphPanel.getWidth() / 100 + v2.getX() * inputGraphPanel.getWidth() / 100) / 2),
+                    (int) ((v1.getY() * inputGraphPanel.getHeight() / 100 + v2.getY() * inputGraphPanel.getHeight() / 100)/2));
         }
     }
 
@@ -192,7 +177,24 @@ public class MainWindow {
                     (int)v1.getY() * mstGraphPanel.getHeight() / 100,
                     (int)v2.getX() * mstGraphPanel.getWidth() / 100,
                     (int)v2.getY() * mstGraphPanel.getHeight() / 100);
+            for(int i = 0; i < inputGraph.getVertices().size(); ++i) {
+                Vertex v = inputGraph.getVertices().get(i);
+                v.setGroupNumber(i);
+            }
+            Color old = g.getColor();
+            g.setColor(Color.BLUE);
+            g.drawString(String.valueOf(v1.getGroupNumber()),
+                    (int)v1.getX() * inputGraphPanel.getWidth() / 100,
+                    (int)v1.getY() * inputGraphPanel.getHeight() / 100);
+            g.drawString(String.valueOf(v2.getGroupNumber()),
+                    (int)v2.getX() * inputGraphPanel.getWidth() / 100,
+                    (int)v2.getY() * inputGraphPanel.getHeight() / 100);
+            g.setColor(old);
+            g.drawString(new DecimalFormat("#.##").format(edge.getWeight()),
+                    (int)((v1.getX() * inputGraphPanel.getWidth() / 100 + v2.getX() * inputGraphPanel.getWidth() / 100)/2),
+                    (int)((v1.getY() * inputGraphPanel.getHeight() / 100 + v2.getY() * inputGraphPanel.getHeight() / 100)/2));
         }
+
     }
 
     private void startAlgorithm() {
@@ -203,7 +205,7 @@ public class MainWindow {
         long timeElapsed = System.nanoTime() - startTime;
         time.setText(Long.toString(timeElapsed/1000) + " ms");
         Double weight = mstGraph.totalWeight();
-        mstWeight.setText(weight.toString());
+        mstWeight.setText(new DecimalFormat("#.##").format(weight));
         mstGraphPanel.repaint();
     }
 

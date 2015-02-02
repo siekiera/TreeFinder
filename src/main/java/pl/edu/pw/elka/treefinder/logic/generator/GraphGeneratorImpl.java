@@ -55,6 +55,6 @@ public class GraphGeneratorImpl implements GraphGenerator{
 
     private Vertex createVertex()
     {
-        return new Vertex(generator.nextDouble() * 100, generator.nextDouble() * 100);
+        return new Vertex(generator.nextDouble() * 98 + 1, generator.nextDouble() * 98 + 1);
     }
 }
