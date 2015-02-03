@@ -11,18 +11,10 @@ import pl.edu.pw.elka.treefinder.model.Graph;
 import pl.edu.pw.elka.treefinder.model.Vertex;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeListener;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.DecimalFormat;
 
 
@@ -49,6 +41,8 @@ public class MainWindow {
     private JPanel mstGraphPanel;
     private JButton saveToFileButton;
     private JTextField densityTextField;
+    private JLabel numberOfEdgesLabel;
+    private JTextField numberOfEdgesTextField;
 
     private Graph inputGraph;
     private Graph mstGraph;
@@ -96,6 +90,8 @@ public class MainWindow {
         density.addChangeListener(e -> {
             int val = validateDensityValue(density.getValue());
             densityTextField.setText(String.valueOf(val));
+            int n = (int) numberOfVertices.getValue();
+            numberOfEdgesTextField.setText(String.valueOf(val * n * (n - 1) / 200));
             density.setValue(val);
         });
         densityTextField.addKeyListener(new KeyAdapter() {
@@ -114,7 +110,7 @@ public class MainWindow {
     }
 
     private int validateDensityValue(int value) {
-        int min = 200/(int)numberOfVertices.getValue();
+        int min = 200 / (int) numberOfVertices.getValue();
         return Math.max(value, min);
     }
 
@@ -127,72 +123,72 @@ public class MainWindow {
     }
 
     private void refreshInputGraph(Graphics g) {
-        g.clearRect(0,0,inputGraphPanel.getWidth(),inputGraphPanel.getHeight());
-        if(inputGraph == null) return;
-        for(Vertex vertex : inputGraph.getVertices()) {
-            g.fillOval((int)vertex.getX() * inputGraphPanel.getWidth() / 100 - 3,
-                    (int)vertex.getY() * inputGraphPanel.getHeight() / 100 - 3,
-                    6,6);
+        g.clearRect(0, 0, inputGraphPanel.getWidth(), inputGraphPanel.getHeight());
+        if (inputGraph == null) return;
+        for (Vertex vertex : inputGraph.getVertices()) {
+            g.fillOval((int) vertex.getX() * inputGraphPanel.getWidth() / 100 - 3,
+                    (int) vertex.getY() * inputGraphPanel.getHeight() / 100 - 3,
+                    6, 6);
         }
-        for(Edge edge : inputGraph.getEdges()) {
+        for (Edge edge : inputGraph.getEdges()) {
             Vertex v1 = edge.getStart();
             Vertex v2 = edge.getEnd();
-            g.drawLine((int)v1.getX() * inputGraphPanel.getWidth() / 100,
-                    (int)v1.getY() * inputGraphPanel.getHeight() / 100,
-                    (int)v2.getX() * inputGraphPanel.getWidth() / 100,
-                    (int)v2.getY() * inputGraphPanel.getHeight() / 100);
-            for(int i = 0; i < inputGraph.getVertices().size(); ++i) {
+            g.drawLine((int) v1.getX() * inputGraphPanel.getWidth() / 100,
+                    (int) v1.getY() * inputGraphPanel.getHeight() / 100,
+                    (int) v2.getX() * inputGraphPanel.getWidth() / 100,
+                    (int) v2.getY() * inputGraphPanel.getHeight() / 100);
+            for (int i = 0; i < inputGraph.getVertices().size(); ++i) {
                 Vertex v = inputGraph.getVertices().get(i);
                 v.setGroupNumber(i);
             }
             Color old = g.getColor();
             g.setColor(Color.BLUE);
             g.drawString(String.valueOf(v1.getGroupNumber()),
-                    (int)v1.getX() * inputGraphPanel.getWidth() / 100,
-                    (int)v1.getY() * inputGraphPanel.getHeight() / 100);
+                    (int) v1.getX() * inputGraphPanel.getWidth() / 100,
+                    (int) v1.getY() * inputGraphPanel.getHeight() / 100);
             g.drawString(String.valueOf(v2.getGroupNumber()),
-                    (int)v2.getX() * inputGraphPanel.getWidth() / 100,
-                    (int)v2.getY() * inputGraphPanel.getHeight() / 100);
+                    (int) v2.getX() * inputGraphPanel.getWidth() / 100,
+                    (int) v2.getY() * inputGraphPanel.getHeight() / 100);
             g.setColor(old);
 
             g.drawString(new DecimalFormat("#.##").format(edge.getWeight()),
                     (int) ((v1.getX() * inputGraphPanel.getWidth() / 100 + v2.getX() * inputGraphPanel.getWidth() / 100) / 2),
-                    (int) ((v1.getY() * inputGraphPanel.getHeight() / 100 + v2.getY() * inputGraphPanel.getHeight() / 100)/2));
+                    (int) ((v1.getY() * inputGraphPanel.getHeight() / 100 + v2.getY() * inputGraphPanel.getHeight() / 100) / 2));
         }
     }
 
     private void refreshMSTGraph(Graphics g) {
-        g.clearRect(0,0,mstGraphPanel.getWidth(),mstGraphPanel.getHeight());
-        if(mstGraph == null) return;
+        g.clearRect(0, 0, mstGraphPanel.getWidth(), mstGraphPanel.getHeight());
+        if (mstGraph == null) return;
 
-        for(Vertex vertex : mstGraph.getVertices()) {
-            g.fillOval((int)vertex.getX() * mstGraphPanel.getWidth() / 100,
-                    (int)vertex.getY() * mstGraphPanel.getHeight() / 100,
-                    5,5);
+        for (Vertex vertex : mstGraph.getVertices()) {
+            g.fillOval((int) vertex.getX() * mstGraphPanel.getWidth() / 100,
+                    (int) vertex.getY() * mstGraphPanel.getHeight() / 100,
+                    5, 5);
         }
-        for(Edge edge : mstGraph.getEdges()) {
+        for (Edge edge : mstGraph.getEdges()) {
             Vertex v1 = edge.getStart();
             Vertex v2 = edge.getEnd();
-            g.drawLine((int)v1.getX() * mstGraphPanel.getWidth() / 100,
-                    (int)v1.getY() * mstGraphPanel.getHeight() / 100,
-                    (int)v2.getX() * mstGraphPanel.getWidth() / 100,
-                    (int)v2.getY() * mstGraphPanel.getHeight() / 100);
-            for(int i = 0; i < inputGraph.getVertices().size(); ++i) {
+            g.drawLine((int) v1.getX() * mstGraphPanel.getWidth() / 100,
+                    (int) v1.getY() * mstGraphPanel.getHeight() / 100,
+                    (int) v2.getX() * mstGraphPanel.getWidth() / 100,
+                    (int) v2.getY() * mstGraphPanel.getHeight() / 100);
+            for (int i = 0; i < inputGraph.getVertices().size(); ++i) {
                 Vertex v = inputGraph.getVertices().get(i);
                 v.setGroupNumber(i);
             }
             Color old = g.getColor();
             g.setColor(Color.BLUE);
             g.drawString(String.valueOf(v1.getGroupNumber()),
-                    (int)v1.getX() * inputGraphPanel.getWidth() / 100,
-                    (int)v1.getY() * inputGraphPanel.getHeight() / 100);
+                    (int) v1.getX() * inputGraphPanel.getWidth() / 100,
+                    (int) v1.getY() * inputGraphPanel.getHeight() / 100);
             g.drawString(String.valueOf(v2.getGroupNumber()),
-                    (int)v2.getX() * inputGraphPanel.getWidth() / 100,
-                    (int)v2.getY() * inputGraphPanel.getHeight() / 100);
+                    (int) v2.getX() * inputGraphPanel.getWidth() / 100,
+                    (int) v2.getY() * inputGraphPanel.getHeight() / 100);
             g.setColor(old);
             g.drawString(new DecimalFormat("#.##").format(edge.getWeight()),
-                    (int)((v1.getX() * inputGraphPanel.getWidth() / 100 + v2.getX() * inputGraphPanel.getWidth() / 100)/2),
-                    (int)((v1.getY() * inputGraphPanel.getHeight() / 100 + v2.getY() * inputGraphPanel.getHeight() / 100)/2));
+                    (int) ((v1.getX() * inputGraphPanel.getWidth() / 100 + v2.getX() * inputGraphPanel.getWidth() / 100) / 2),
+                    (int) ((v1.getY() * inputGraphPanel.getHeight() / 100 + v2.getY() * inputGraphPanel.getHeight() / 100) / 2));
         }
 
     }
@@ -203,7 +199,7 @@ public class MainWindow {
 
     private void stopAlgorithm() {
         long timeElapsed = System.nanoTime() - startTime;
-        time.setText(Long.toString(timeElapsed/1000) + " ms");
+        time.setText(Long.toString(timeElapsed / 1000) + " ms");
         Double weight = mstGraph.totalWeight();
         mstWeight.setText(new DecimalFormat("#.##").format(weight));
         mstGraphPanel.repaint();
